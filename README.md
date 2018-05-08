@@ -10,6 +10,8 @@
 
 The linepy module only requires Python 3. You can download from [here](https://www.python.org/downloads/). 
 
+Remember to turn off Letter Sealing!
+
 ## Installation
 
 Installation is simple. It can be installed from pip using the following command:
