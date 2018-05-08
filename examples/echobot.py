@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from linepy import *
 
-line = LINE('EMAIL', 'PASSWORD')
-#line = LINE('AUTHTOKEN')
+#line = LINE('EMAIL', 'PASSWORD')
+line = LINE('AUTHTOKEN')
 
 line.log("Auth Token : " + str(line.authToken))
 
@@ -12,6 +12,8 @@ oepoll = OEPoll(line)
 # Receive messages from OEPoll
 def RECEIVE_MESSAGE(op):
     msg = op.message
+    if msg.toType == 0:
+        msg.to = msg._from
 
     text = msg.text
     msg_id = msg.id
@@ -19,16 +21,16 @@ def RECEIVE_MESSAGE(op):
     sender = msg._from
     
     # Check content only text message
-    if msg.contentType == 0:
+    #if msg.contentType == 0:
         # Check only group chat
-        if msg.toType == 2:
+        
             # Get sender contact
-            contact = line.getContact(sender)
-            txt = '[%s] %s' % (contact.displayName, text)
+    contact = line.getContact(sender)
+    txt = '[%s] %s' % (contact.displayName, text)
             # Send a message
-            line.sendMessage(receiver, txt)
+    line.sendMessage(receiver, txt)
             # Print log
-            line.log(txt)
+    line.log(txt)
 
 # Add function to OEPoll
 oepoll.addOpInterruptWithDict({

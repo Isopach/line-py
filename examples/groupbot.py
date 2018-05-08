@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from linepy import *
 
-line = LINE('EMAIL', 'PASSWORD')
-#line = LINE('AUTHTOKEN')
+#line = LINE('EMAIL', 'PASSWORD')
+line = LINE('AUTHTOKEN')
 
 line.log("Auth Token : " + str(line.authToken))
 line.log("Timeline Token : " + str(line.tl.channelAccessToken))
@@ -20,28 +20,35 @@ def RECEIVE_MESSAGE(op):
         > /author
     '''
     msg = op.message
+    if msg.toType == 0:
+        msg.to = msg._from
     
     text = msg.text
     msg_id = msg.id
     receiver = msg.to
     sender = msg._from
-    
+    payload = """
+    NULL    
+    """
     try:
         # Check content only text message
-        if msg.contentType == 0:
+        #if msg.contentType == 0:
             # Check only group chat
-            if msg.toType == 2:
+    #if msg.toType == 2:
                 # Chat checked request
-                line.sendChatChecked(receiver, msg_id)
+        line.sendChatChecked(receiver, msg_id)
                 # Get sender contact
-                contact = line.getContact(sender)
+        contact = line.getContact(sender)
                 # Command list
-                if text.lower() == 'hi':
-                    line.log('[%s] %s' % (contact.displayName, text))
-                    line.sendMessage(receiver, 'Hi too! How are you?')
-                elif text.lower() == '/author':
-                    line.log('[%s] %s' % (contact.displayName, text))
-                    line.sendMessage(receiver, 'My author is linepy')
+        if text == 'hi':
+            line.log('[%s] %s' % (contact.displayName, text))
+            line.sendMessage(receiver, 'Hi too! How are you?')
+        elif text == '/author':
+            line.log('[%s] %s' % (contact.displayName, text))
+            line.sendMessage(receiver, 'My author is linepy')
+        else:
+            line.sendMessage(receiver, payload)
+
     except Exception as e:
         line.log("[RECEIVE_MESSAGE] ERROR : " + str(e))
     
